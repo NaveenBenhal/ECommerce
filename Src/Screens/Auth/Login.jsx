@@ -5,13 +5,15 @@ import { GlobalCss } from '../../Constats/GlobalCss';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { contactValidator } from '../../Helpers/Validations';
 import { LoginApi } from '../../Api/Auth';
+import { useDispatch } from 'react-redux';
+import { updateLogRes } from '../../Redux/Common/Actions/AuthAction';
 
 export default function Login({ navigation }) {
   const [textInput, setTextInput] = useState([
     { id: 1, label: 'Contact Number', value: '9990000000' },
     { id: 2, label: 'Password', value: '123456' }
   ]);
-
+const dispatch = useDispatch()
   const handleChange = (id, text) => {
     setTextInput(prevState =>
       prevState.map(i => (i.id === id ? { ...i, value: text, error: null } : i))
@@ -68,6 +70,7 @@ export default function Login({ navigation }) {
 
       // // Check if the API returned an error
       if (response.Status == 200) {
+        dispatch(updateLogRes(response?.loginData))
         navigation.navigate('AdminStack', { screen: 'AdminDashboard' })
       } else {
         console.log('LOGIN error:', response);
